@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PharmaSphere</title>
+    <link rel="shortcut icon" href="assests/img/logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="assests/style.css">
+  </head>
+<body>
+     <!-- navbar -->
+    <nav class="navbar" id="navbar">
+        <p><b style="font-size: x-large;">PharmaSphere- </b><span><i>Your Gateway to Health and Wellness</i></span></p>
+        <div class="search-container">
+            <button class="about" onclick="openAboutPage()">About Us</button>
+            <input type="text" id="searchInput" placeholder="Search...">
+            <button id="searchButton">Search</button> <!-- Added button -->
+            <div id="searchResults" class="search-results"></div>
+        </div>
+    </nav>
+    
+    
+
+    <div class="medicine-container" id="medicine-container">
+        <!-- Medicine cards will be dynamically added here -->
+    </div>
+
+    <script>
+
+// Add this JavaScript code after your existing script
+window.addEventListener("scroll", function() {
+    const navbar = document.getElementById("navbar");
+    if (window.scrollY > 0) {
+        navbar.classList.add("scrolled");
+    } else {
+        navbar.classList.remove("scrolled");
+    }
+});
+document.addEventListener('DOMContentLoaded', function() {
+    // Get references to the search input and button
+    const searchInput = document.getElementById('searchInput');
+    const searchButton = document.getElementById('searchButton');
+
+    // Add click event listener to the search button
+    searchButton.addEventListener('click', function() {
+        // Get the search query from the input field
+        const searchQuery = searchInput.value.trim();
+
+        // Check if the search query is not empty
+        if (searchQuery) {
+            // Construct the Google search URL
+            const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
+
+            // Open the search URL in a new browser tab
+            window.open(searchUrl, '_blank');
+        } else {
+            alert('Please enter a search query.');
+        }
+    });
+});
+
+
+        // Function to create medicine card
+        function createMedicineCard(medicine) {
+            const card = document.createElement("div");
+            card.classList.add("medicine-card");
+
+            const image = document.createElement("img");
+            image.src = medicine["Image URL"];
+            image.alt = "Medicine Image";
+
+            // Add event listener to the image
+            image.addEventListener("click", function() {
+                // Open a new page with the details of the clicked medicine
+                const detailsPage = window.open("", "_blank");
+                detailsPage.document.write(`
+                    <html>
+                    <head>
+                        <title>${medicine["Medicine Name"]} Details</title>
+                        <style>
+        body {
+            margin-top: 5%;
+            margin-bottom: 5%;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Ensure full viewport height */
+            background-color: #f5f5f5; /* Optional: Set a background color */
+        }
+        .medicine-details {
+            text-align: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+                    </head>
+                    <body>
+                        <div class="medicine-details">
+        <h1>${medicine["Medicine Name"]} Details</h1>
+        <img src="${medicine["Image URL"]}" alt="Medicine Image">
+        <p><strong>Composition:</strong> ${medicine["Composition"]}</p>
+        <p><strong>Uses:</strong> ${medicine["Uses"]}</p>
+        <p><strong>Side Effects:</strong> ${medicine["Side_effects"]}</p>
+        <p><strong>Manufacturer:</strong> ${medicine["Manufacturer"]}</p>
+        <p><strong>Excellent Review %:</strong> ${medicine["Excellent Review %"]}</p>
+        <p><strong>Average Review %:</strong> ${medicine["Average Review %"]}</p>
+        <p><strong>Poor Review %:</strong> ${medicine["Poor Review %"]}</p>
+    </div>
+                    </body>
+                    </html>
+                `);
+            });
+
+            const info = document.createElement("div");
+            info.classList.add("medicine-info");
+            info.innerHTML = `
+                <h3>${medicine["Medicine Name"]}</h3>
+                 <p><strong>Uses:</strong> ${medicine["Uses"]}</p>
+             `;
+
+            card.appendChild(image);
+            card.appendChild(info);
+
+            return card;
+        }
+
+        // Function to render medicine cards
+        function renderMedicineCards(data) {
+            const container = document.getElementById("medicine-container");
+
+            data.forEach(medicine => {
+                const card = createMedicineCard(medicine);
+                container.appendChild(card);
+            });
+        }
+
+        // Fetch medicine data from JSON file
+        fetch("assests/medicine.json")
+            .then(response => response.json())
+            .then(data => renderMedicineCards(data))
+            .catch(error => console.error("Error fetching data:", error));
+    </script>
+    <script>
+        function openAboutPage() {
+    // Create a new window or tab
+    const aboutPage = window.open('', '_blank');
+    
+    // Write HTML content to the new window
+    aboutPage.document.write(`
+    <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About PharmaSphere</title>
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .contact-info {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #f4f4f4;
+            border-radius: 5px;
+        }
+
+        .contact-info h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .contact-info p {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>About PharmaSphere</h1>
+        <p>At PharmaSphere, we are committed to being your trusted gateway to health and wellness. With a mission to provide accessible and reliable healthcare information and resources, PharmaSphere strives to empower individuals to make informed decisions about their well-being.</p>
+
+        <h2>Our Mission</h2>
+        <p>Our mission at PharmaSphere is to simplify healthcare access and improve health outcomes for individuals and communities worldwide. We aim to achieve this by offering a comprehensive platform that encompasses a wide range of health-related services, including information, consultation, and access to quality products.</p>
+
+        <h2>What We Offer</h2>
+        <ul>
+            <li><strong>Health Information:</strong> PharmaSphere provides a wealth of up-to-date and accurate health information across various topics, including medical conditions, treatments, preventive care, and wellness tips. Our content is curated by medical professionals and experts to ensure reliability and relevance.</li>
+            <li><strong>Consultation Services:</strong> We offer virtual consultation services with healthcare professionals, enabling individuals to seek medical advice, clarification, and guidance from the comfort of their homes. Our platform connects users with licensed doctors and specialists across different fields of medicine.</li>
+            <li><strong>Product Marketplace:</strong> In collaboration with reputable healthcare brands, PharmaSphere offers a curated marketplace featuring a diverse range of health and wellness products. From vitamins and supplements to medical devices and personal care items, our marketplace provides access to quality products that promote overall well-being.</li>
+        </ul>
+
+        <h2>Our Commitment to Quality</h2>
+        <p>At PharmaSphere, quality and integrity are at the forefront of everything we do. We prioritize user safety, privacy, and satisfaction in all our interactions and transactions. Our team works tirelessly to maintain the highest standards of accuracy, reliability, and ethical conduct across our platform.</p>
+
+        <h2>Get in Touch</h2>
+        <div class="contact-info">
+            <h2>Contact Information</h2>
+            <p><strong>Email:</strong> godrwt@gmail.com</p>
+            <p><strong>Phone:</strong> +91 9025305010</p>
+            <p><strong>Developers:</strong> Students of Jain University(Rudresh,Yuvaraj,Noorul,Akash)</p>
+        </div>
+
+        <h2>Join Us on the Journey to Better Health</h2>
+        <p>PharmaSphere invites you to join us on our journey to promote health and wellness for all. Together, we can empower individuals, families, and communities to lead healthier, happier lives. Explore our platform, engage with our resources, and let's embark on the path to better health, together.</p>
+    </div>
+</body>
+
+</html>
+
+    `);
+    
+    // Close the document for writing
+    aboutPage.document.close();
+}
+
+    </script>
+</body>
+</html>
